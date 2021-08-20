@@ -5,6 +5,7 @@ A simple solution for creating Bootstrap forms on the fly.
 
 ## Demo
 Demo Files: [./demo](./demo)
+
 Fiddle: https://jsfiddle.net/ux84votz/
 
 ## Dependencies
