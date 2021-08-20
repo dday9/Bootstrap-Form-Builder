@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<meta name="description" content="A demonstration of the Bootstrap Form Builder" />
+	<meta name="author" content="dday9" />
+
+	<title>Bootstrap Form Builder Demo</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"" />
+</head>
+
+<body>
+	<div class="container" id="container"></div>
+
+	<script src="bootstrap-form-builder.js"></script>
+	<script>
+	window.addEventListener('load', function() {
+		const contactForm = formBuilder.buildForm({
+			attributes: {
+				enctype: 'application/x-www-form-urlencoded',
+				method: 'post',
+			},
+			fieldsets: [
+			{
+				legend: 'Name',
+				fields: [
+					{
+						attributes: {
+						name: 'firstName',
+						placeholder: 'John'
+						},
+						label: 'First Name'
+					},
+					{
+						attributes: {
+						name: 'lastName',
+						placeholder: 'Doe'
+						},
+						label: 'Last Name'
+					},
+					{
+						attributes: {
+						name: 'email'
+						},
+						label: 'Email Address',
+						type: 'email'
+					}
+				]
+			},
+			{
+				legend: 'Address',
+				fields: [
+					{
+						attributes: {
+							name: 'street1',
+							placeholder: '123 Main St'
+						},
+						label: 'Street'
+					},
+					{
+						attributes: {
+							name: 'city',
+							placeholder: 'Anytown'
+						},
+						label: 'City'
+					},
+					{
+						attributes: {
+							list: 'datalist-states',
+							name: 'state'
+						},
+						datalist: {
+							id: 'datalist-states',
+							values: [ 'AK','AL','AR','AS','AZ','CA','CO','CT','DC','DE','FL','GA','GU','HI','IA','ID','IL','IN','KS','KY','LA','MA','MD','ME','MI','MN','MO','MS','MT','NC','ND','NE','NH','NJ','NM','NV','NY','OH','OK','OR','PA','PR','RI','SC','SD','TN','TX','UT','VA','VI','VT','WA','WI','WV','WY']
+						},
+						label: 'State',
+					},
+					{
+						attributes: {
+							name: 'zip',
+							pattern: '\\d{5}',
+							placeholder: '12345'
+						},
+						label: 'Zip Code',
+						type: 'tel'
+					}
+				]
+			}
+			],
+			submit: (e) => {
+				e.preventDefault();
+				console.log('submit');
+			}
+		});
+
+		const input = document.createElement('input');
+		input.setAttribute('class', 'btn btn-primary');
+		input.setAttribute('type', 'submit');
+		input.value = 'Submit';
+		contactForm.append(input);
+
+		document.getElementById('container').append(contactForm);
+	}, false);
+	</script>
+</body>
+
+</html>
