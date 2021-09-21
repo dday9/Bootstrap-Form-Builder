@@ -144,7 +144,14 @@ formBuilder.buildFieldset = (fieldset) => {
     divContainer.setAttribute('class', 'mb-3');
 
     // validate the field type or default to text
-    const fieldType = (formBuilder.isValidFieldType(field) ? field.type : 'text');
+    let fieldType = 'text';
+    if (formBuilder.isValidFieldType(field)) {
+      fieldType = field.type;
+    } else {
+      if (typeof field.type !== 'undefined') {
+        console.warn(`${field.type} is not a valid input type. Defaulting to text.`);
+      }
+    }
 
     // optionally create the label
     if (field.label) {
