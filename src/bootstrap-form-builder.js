@@ -51,7 +51,7 @@ formBuilder.buildForm = (options) => {
     if (formBuilder.isValidFormAttribute(attribute)) {
       form.setAttribute(attribute, options.attributes[attribute]);
     } else {
-      console.log(`'${attribute}' is an invalid form attribute.`);
+      console.warning(`'${attribute}' is an invalid form attribute.`);
     }
   });
 
@@ -128,7 +128,7 @@ formBuilder.buildFieldset = (fieldset) => {
   if (fieldset.legend) {
     if (Object.prototype.toString.call(fieldset.legend) !== "[object String]") {
       // validate the legend property
-      console.log('fieldset.legend is not a string');
+      console.warning('fieldset.legend is not a string');
     } else {
       // create the legend element and append it to the fieldset
       const legend = document.createElement('legend');
@@ -150,7 +150,7 @@ formBuilder.buildFieldset = (fieldset) => {
     if (field.label) {
       if (Object.prototype.toString.call(field.label) !== "[object String]") {
         // validate the legend property
-        console.log('field.label is not a string');
+        console.warning('field.label is not a string');
       } else {
         // create the label and append it to the div container
         const label = formBuilder.buildLabel(field.label);
@@ -203,7 +203,7 @@ formBuilder.buildInput = (field, fieldType) => {
     if (formBuilder.isValidInputAttribute(fieldType, attribute)) {
       input.setAttribute(attribute, field.attributes[attribute]);
     } else {
-      console.log(`'${attribute}' is an invalid attribute for ${fieldType}.`);
+      console.warning(`'${attribute}' is an invalid attribute for ${fieldType}.`);
     }
   });
   if (attributes.indexOf('class') < 0 || attributes.class.indexOf('form-control') < 0) {
