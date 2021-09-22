@@ -15,10 +15,51 @@ Fiddle: https://jsfiddle.net/mo96241a/
 ## Options
 The option passed to the `formBuilder.buildForm` method is the core behind the form builder library. The option can be represented as the following interface:
 ```js
-interface IOption {
-  attributes?: object[];
+interface IForm {
+  attributes?: IFormAttribute[];
   fieldsets?: IFieldset[];
   submit?: (e) => void;
+}
+
+interface IFormAttribute {
+  accept?: string;
+  accept-charset?: string;
+  accesskey?: string;
+  action?: string;
+  autocapitalize?: string;
+  autocomplete?: string;
+  autofocus?: string;
+  class?: string;
+  contenteditable?: string;
+  context-menu?: string;
+  dir?: string;
+  draggable?: string;
+  enctype?: string;
+  enterkeyhint?: string;
+  exportparts?: string;
+  hidden?: string;
+  id?: string;
+  inputmode?: string;
+  is?: string;
+  itemid?: string;
+  itemprop?: string;
+  itemref?: string;
+  itemscope?: string;
+  itemtype?: string;
+  lang?: string;
+  method?: string;
+  name?: string;
+  nonce?: string;
+  novalidate?: string;
+  part?: string;
+  rel?: string;
+  slot?: string;
+  spellcheck?: string;
+  style?: string;
+  tabindex?: string;
+  target?: string;
+  title?: string;
+  translate?: string;
 }
 
 interface IFieldset {
