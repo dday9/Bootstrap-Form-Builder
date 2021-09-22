@@ -30,7 +30,7 @@ interface IField {
   attributes?: object[];
   datalist?: IDatalist;
   label?: string;
-  type: string;
+  type: 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'search' | 'tel' | 'text' | 'time' | 'url' | 'week';
 }
 
 interface IDatalist {
