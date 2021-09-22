@@ -200,6 +200,11 @@ formBuilder.buildInput = (field, fieldType) => {
     return null;
   }
 
+  // special case for <select /> elements
+  if (fieldType === 'select') {
+   return formBuilder.buildSelect(field);
+  }
+
   // create the input
   const input = document.createElement('input');
   input.setAttribute('type', fieldType);
@@ -236,6 +241,97 @@ formBuilder.buildLabel = (label) => {
   return labelElement;
 };
 
+formBuilder.buildOption = (option) => {
+  if (Object.prototype.toString.call(option) === "[object String]") {
+    const optionElement = document.createElement('option');
+    optionElement.setAttribute('value', option);
+    optionElement.innerHTML = option;
+    return optionElement;
+  } else if (typeof option === 'object') {
+    const optionElement = document.createElement('option');
+    const optionKeys = Object.keys(option);
+    if (optionKeys.indexOf('optgroup') > -1) {
+      const optGroupKeys = Object.keys(option.optgroup);
+      if (optGroupKeys.indexOf('label') < 0) {
+        console.error('\'optgroup\' requires a \'label\' attribute.');
+        return;
+      }
+      const optGroupElement = document.createElement('optgroup');
+      optGroupElement.setAttribute('label', option.optgroup.label);
+      if (optGroupKeys.indexOf('options') > -1) {
+        // check that the options attribute is an array
+        if (!Array.isArray(option.optgroup.options)) {
+          console.error('\'optgroup\' options is invalid. Expected type is an array.');
+          return null;
+        }
+        // loop over each option
+        option.optgroup.options.forEach(innerOption => {
+          const innerOptionElement = formBuilder.buildOption(innerOption);
+          if (innerOptionElement) {
+            optGroupElement.append(innerOptionElement);
+          }
+        });
+      }
+      return optGroupElement;
+    } else {
+      if (optionKeys.indexOf('text') > -1) {
+        optionElement.innerHTML = option.text;
+      }
+      if (optionKeys.indexOf('value') > -1) {
+        optionElement.setAttribute('value', option.value);
+      }
+      return optionElement;
+    }
+  } else {
+    console.error('\'option\' is invalid. Expected type is string or object.');
+    return null;
+  }
+}
+
+formBuilder.buildSelect = (field) => {
+  const attributes = Object.keys(field.attributes);
+  
+  // check for the options attribute
+  if (attributes.indexOf('options') < 0) {
+    console.error('\'select\' types must have an \'options\' attribute.');
+    return null;
+  }
+  
+  // check that the options attribute is an array
+  if (!Array.isArray(field.attributes.options)) {
+    console.error('\'select\' types must have an \'options\' attribute that is an array.');
+    return null;
+  }
+  
+  // create the select
+  const select = document.createElement('select');
+
+  // iterate over each attribute to set the select attribute
+  attributes.forEach(attribute => {
+    if (attribute === 'options') {
+      return;
+    } else if (formBuilder.isValidInputAttribute('select', attribute)) {
+      select.setAttribute(attribute, field.attributes[attribute]);
+    } else {
+      console.warn(`'${attribute}' is an invalid attribute for ${fieldType}.`);
+    }
+  });
+
+  // iterate over each option
+  field.attributes.options.forEach(option => {
+    const optionElement = formBuilder.buildOption(option);
+    if (optionElement) {
+      select.append(optionElement);
+    }
+  });
+
+  if (attributes.indexOf('class') < 0 || attributes.class.indexOf('form-select') < 0) {
+    select.classList.add('form-select');
+  }
+
+  return select;
+}
+
 formBuilder.isValidFieldType = (field) => {
   // validate the field parameter
   if (typeof field !== 'object' || field == null || !field.hasOwnProperty('type')) {
@@ -257,6 +353,7 @@ formBuilder.isValidFieldType = (field) => {
     'radio',
     'range',
     'search',
+    'select',
     'tel',
     'text',
     'time',
@@ -492,6 +589,13 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
       'required'
     ];
     return searchAttributes.indexOf(attribute) > -1;
+  }
+
+  if (type === 'select') {
+    const selectAttributes = [
+      'multiple',
+      'size'
+    ];
   }
 
   if (type === 'tel') {
