@@ -159,8 +159,14 @@ formBuilder.buildFieldset = (fieldset) => {
         // validate the legend property
         console.warn('field.label is not a string');
       } else {
+        // optionally get the id for the 'for' attribute
+        let id = null;
+        if (field.attributes && field.attributes.id) {
+        	id = field.attributes.id;
+        }
+
         // create the label and append it to the div container
-        const label = formBuilder.buildLabel(field.label);
+        const label = formBuilder.buildLabel(field.label, id);
         if (label) {
           divContainer.append(label);
         }
@@ -226,7 +232,7 @@ formBuilder.buildInput = (field, fieldType) => {
   return input;
 };
 
-formBuilder.buildLabel = (label) => {
+formBuilder.buildLabel = (label, id = null) => {
   // validate the label parameter
   if (Object.prototype.toString.call(label) !== "[object String]") {
     return null;
@@ -236,6 +242,10 @@ formBuilder.buildLabel = (label) => {
   const labelElement = document.createElement('label');
   labelElement.setAttribute('class', 'form-label');
   labelElement.innerHTML = label;
+
+	if (id) {
+  	labelElement.setAttribute('for', id);
+  }
 
   // return the label
   return labelElement;
