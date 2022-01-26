@@ -16,7 +16,7 @@ Fiddle: https://jsfiddle.net/Lr2fh9p6/
 The option passed to the `formBuilder.buildForm` method is the core behind the form builder library. The option can be represented as the following interface:
 ```js
 interface IForm {
-  attributes?: IFormAttribute[];
+  attributes?: IFormAttribute;
   fieldsets?: IFieldset[];
   submit?: (e) => void;
 }
