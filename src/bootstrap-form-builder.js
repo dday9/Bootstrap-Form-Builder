@@ -184,6 +184,7 @@ formBuilder.buildFieldset = (fieldset) => {
       const datalist = formBuilder.buildDatalist(field.datalist);
       if (datalist) {
         divContainer.append(datalist);
+        input.setAttribute('list', field.datalist.id);
       }
     }
 
