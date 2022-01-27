@@ -520,6 +520,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
   if (type === 'email') {
     const emailAttributes = [
       'list',
+      'placeholder',
       'readonly',
       'required'
     ];
@@ -545,6 +546,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
       'list',
       'max',
       'min',
+      'placeholder',
       'readonly',
       'required',
       'step'
@@ -556,6 +558,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
     const numberAttributes = [
       'max',
       'min',
+      'placeholder',
       'required',
       'step'
     ];
@@ -605,6 +608,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
   if (type === 'select') {
     const selectAttributes = [
       'multiple',
+      'placeholder',
       'size'
     ];
   }
@@ -667,6 +671,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
       'list',
       'max',
       'min',
+      'placeholder',
       'readonly',
       'required',
       'step'
