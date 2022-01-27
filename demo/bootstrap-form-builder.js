@@ -137,6 +137,9 @@ formBuilder.buildFieldset = (fieldset) => {
     }
   }
 
+  const divRow = document.createElement('div');
+  divRow.classList.add('row');
+
   // iterate over each field
   fieldset.fields.forEach(field => {
     // create the div container
@@ -179,6 +182,34 @@ formBuilder.buildFieldset = (fieldset) => {
       divContainer.append(input);
     }
 
+		// optionally build the grid
+    if (field.grid) {
+      if (typeof field.grid === 'object') {
+        if (field.grid.xs) {
+        	divContainer.classList.add(`col-xs-${field.grid.xs}`);
+        }
+        if (field.grid.sm) {
+        	divContainer.classList.add(`col-sm-${field.grid.sm}`);
+        }
+        if (field.grid.md) {
+        	divContainer.classList.add(`col-md-${field.grid.md}`);
+        }
+        if (field.grid.lg) {
+        	divContainer.classList.add(`col-lg-${field.grid.lg}`);
+        }
+        if (field.grid.xl) {
+        	divContainer.classList.add(`col-xl-${field.grid.xl}`);
+        }
+        if (field.grid.xxl) {
+        	divContainer.classList.add(`col-xxl-${field.grid.xxl}`);
+        }
+      } else if (Object.prototype.toString.call(fieldType) !== "[object String]") {
+      	divContainer.classList.add(field.grid);
+      } else {
+      	console.warn('The field grid is not a valid string or object.');
+      }
+    }
+
     // optionally create the datalist
     if (field.hasOwnProperty('datalist') && typeof field.datalist === 'object' && field.datalist !== null) {
       const datalist = formBuilder.buildDatalist(field.datalist);
@@ -189,8 +220,17 @@ formBuilder.buildFieldset = (fieldset) => {
     }
 
     // append the div container
-    fieldsetElement.append(divContainer);
+    divRow.append(divContainer);
   });
+
+	if (fieldset.grid) {
+  	fieldsetElement.append(divRow);
+  } else {
+  	const children = Array.from(divRow.children);
+  	for (let child of children) {
+    	fieldsetElement.append(child);
+    }
+  }
 
   // return the fieldset
   return fieldsetElement;
@@ -225,7 +265,7 @@ formBuilder.buildInput = (field, fieldType) => {
       console.warn(`'${attribute}' is an invalid attribute for ${fieldType}.`);
     }
   });
-  if (attributes.indexOf('class') < 0 || attributes.class.indexOf('form-control') < 0) {
+  if (attributes.indexOf('class') < 0 || field.attributes['class'].indexOf('form-control') < 0) {
     input.classList.add('form-control');
   }
 
@@ -520,6 +560,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
   if (type === 'email') {
     const emailAttributes = [
       'list',
+      'placeholder',
       'readonly',
       'required'
     ];
@@ -545,6 +586,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
       'list',
       'max',
       'min',
+      'placeholder',
       'readonly',
       'required',
       'step'
@@ -556,6 +598,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
     const numberAttributes = [
       'max',
       'min',
+      'placeholder',
       'required',
       'step'
     ];
@@ -605,6 +648,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
   if (type === 'select') {
     const selectAttributes = [
       'multiple',
+      'placeholder',
       'size'
     ];
   }
@@ -667,6 +711,7 @@ formBuilder.isValidInputAttribute = (type, attribute) => {
       'list',
       'max',
       'min',
+      'placeholder',
       'readonly',
       'required',
       'step'
