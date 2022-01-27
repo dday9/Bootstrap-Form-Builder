@@ -6,7 +6,7 @@ A simple solution for creating Bootstrap forms on the fly.
 ## Demo
 Demo Files: [./demo](./demo)
 
-Fiddle: https://jsfiddle.net/h7owygkL/
+Fiddle: https://jsfiddle.net/aLh69q3k/
 
 ## Dependencies
 ### CSS
@@ -65,13 +65,24 @@ interface IFormAttribute {
 interface IFieldset {
   legend?: string;
   fields?: IField[] | ISelect[];
+  grid?: boolean;
 }
 
 interface IField {
   attributes?: object[];
   datalist?: IDatalist;
+  grid?: string | IGrid;
   label?: string;
   type: 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'search' | 'tel' | 'text' | 'time' | 'url' | 'week';
+}
+
+interface IGrid {
+  xs?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
+  xxl?: number;
 }
 
 interface ISelect {
@@ -98,6 +109,7 @@ window
       },
       fieldsets: [
         {
+        	grid: true,
           legend: 'Name',
           fields: [
             {
@@ -105,22 +117,35 @@ window
                 name: 'firstName',
                 placeholder: 'John'
               },
-              label: 'First Name'
+              label: 'First Name',
+              grid: {
+              	xs: 12,
+                md: 4
+              }
             }, {
               attributes: {
                 name: 'lastName',
                 placeholder: 'Doe'
               },
-              label: 'Last Name'
+              label: 'Last Name',
+              grid: {
+              	xs: 12,
+                md: 4
+              }
             }, {
               attributes: {
                 name: 'email'
               },
               label: 'Email Address',
-              type: 'email'
+              type: 'email',
+              grid: {
+              	xs: 12,
+                md: 4
+              }
             }
           ]
         }, {
+        	grid: true,
           legend: 'Address',
           fields: [
             {
@@ -134,7 +159,11 @@ window
                 name: 'city',
                 placeholder: 'Anytown'
               },
-              label: 'City'
+              label: 'City',
+              grid: {
+              	xs: 12,
+                md: 4
+              }
             }, {
               attributes: {
                 name: 'state',
@@ -380,7 +409,11 @@ window
                 ]
               },
               label: 'State',
-              type: 'select'
+              type: 'select',
+              grid: {
+              	xs: 12,
+                md: 4
+              }
             }, {
               attributes: {
                 name: 'zip',
@@ -388,7 +421,8 @@ window
                 placeholder: '12345'
               },
               label: 'Zip Code',
-              type: 'tel'
+              type: 'tel',
+              grid: 'col-md-4'
             }
           ]
         }
