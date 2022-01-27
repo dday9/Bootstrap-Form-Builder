@@ -109,7 +109,7 @@ window
       },
       fieldsets: [
         {
-        	grid: true,
+          grid: true,
           legend: 'Name',
           fields: [
             {
@@ -145,7 +145,7 @@ window
             }
           ]
         }, {
-        	grid: true,
+          grid: true,
           legend: 'Address',
           fields: [
             {
