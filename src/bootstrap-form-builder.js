@@ -244,8 +244,8 @@ formBuilder.buildLabel = (label, id = null) => {
   labelElement.setAttribute('class', 'form-label');
   labelElement.innerHTML = label;
 
-	if (id) {
-  	labelElement.setAttribute('for', id);
+  if (id) {
+    labelElement.setAttribute('for', id);
   }
 
   // return the label
