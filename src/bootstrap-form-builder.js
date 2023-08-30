@@ -150,6 +150,9 @@ formBuilder.buildFieldset = (fieldset) => {
     let fieldType = 'text';
     if (formBuilder.isValidFieldType(field)) {
       fieldType = field.type;
+      if (fieldType === 'checkbox' || fieldType === 'radio') {
+        divContainer.classList.add('form-check');
+      }
     } else {
       if (typeof field.type !== 'undefined') {
         console.warn(`${field.type} is not a valid input type. Defaulting to text.`);
@@ -171,6 +174,10 @@ formBuilder.buildFieldset = (fieldset) => {
         // create the label and append it to the div container
         const label = formBuilder.buildLabel(field.label, id);
         if (label) {
+          if (fieldType === 'checkbox' || fieldType === 'radio') {
+            label.classList.remove('form-label');
+            label.classList.add('form-check-label');
+          }
           divContainer.append(label);
         }
       }
@@ -219,8 +226,18 @@ formBuilder.buildFieldset = (fieldset) => {
       }
     }
 
-    // append the div container
-    divRow.append(divContainer);
+    
+    if (fieldType === 'checkbox' || fieldType === 'radio') {
+      const parentDiv = document.createElement('div');
+      const nonCheckClasses = divContainer.classList.value.replace('form-check', '');
+      parentDiv.setAttribute('class', nonCheckClasses);
+      divContainer.setAttribute('class', 'form-check');
+      parentDiv.append(divContainer);
+      divRow.append(parentDiv);
+    } else {
+      // append the div container
+      divRow.append(divContainer);
+    }
   });
 
 	if (fieldset.grid) {
@@ -266,9 +283,16 @@ formBuilder.buildInput = (field, fieldType) => {
     }
   });
   if (attributes.indexOf('class') < 0 || field.attributes['class'].indexOf('form-control') < 0) {
-    input.classList.add('form-control');
+    // special case for checkbox/radio inputs
+    if (fieldType === 'checkbox' || fieldType === 'radio') {
+      input.classList.add('form-check-input');
+    } else {
+      input.classList.add('form-control');
+    }
   }
 
+  
+ 
   // return the input
   return input;
 };
