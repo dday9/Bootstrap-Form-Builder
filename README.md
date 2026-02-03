@@ -4,79 +4,131 @@
 A simple solution for creating Bootstrap forms on the fly.
 
 ## Demo
+
 Demo Files: [./demo](./demo)
 
-Fiddle: https://jsfiddle.net/sr92ubq3/
+Fiddle (ESM build): https://jsfiddle.net/hLj2mb17/
+Fiddle (UMD build): https://jsfiddle.net/x7p9Lv12/
 
 ## Dependencies
+
 ### CSS
- - Bootstrap 5.0
 
-## Options
-The option passed to the `formBuilder.buildForm` method is the core behind the form builder library. The option can be represented as the following interface:
+ - Bootstrap 5.x
+
+## Installation
+
+This library can be used either as an ES module or as a UMD script (classic `<script>` usage).
+
+### ES Module (recommended)
+
 ```js
-interface IForm {
-  attributes?: IFormAttribute;
-  fieldsets?: IFieldset[];
-  submit?: (e) => void;
-}
+import { FormBuilder } from './bootstrap-form-builder.esm.js';
+const form = FormBuilder.buildForm(options);
+```
 
-interface IFormAttribute {
-  accept?: string;
-  accept-charset?: string;
-  accesskey?: string;
-  action?: string;
-  autocapitalize?: string;
-  autocomplete?: string;
-  autofocus?: string;
-  class?: string;
-  contenteditable?: string;
-  context-menu?: string;
-  dir?: string;
-  draggable?: string;
-  enctype?: string;
-  enterkeyhint?: string;
-  exportparts?: string;
-  hidden?: string;
-  id?: string;
-  inputmode?: string;
-  is?: string;
-  itemid?: string;
-  itemprop?: string;
-  itemref?: string;
-  itemscope?: string;
-  itemtype?: string;
-  lang?: string;
-  method?: string;
-  name?: string;
-  nonce?: string;
-  novalidate?: string;
-  part?: string;
-  rel?: string;
-  slot?: string;
-  spellcheck?: string;
-  style?: string;
-  tabindex?: string;
-  target?: string;
-  title?: string;
-  translate?: string;
-}
+### UMD (script tag)
 
-interface IFieldset {
+```html
+<script src="bootstrap-form-builder.umd.js"></script>
+<script>
+  const form = formBuilder.buildForm(options);
+</script>
+```
+
+> Note:
+> ES module usage exposes `FormBuilder` (PascalCase).
+> UMD usage exposes `formBuilder` (camelCase).
+
+## Configuration Reference
+
+> This section documents the current configuration shape for both ES module
+> and UMD usage.
+>
+> The configuration object is the same for ESM and UMD builds; only the
+> entry point differs (`FormBuilder` vs `formBuilder`).
+>
+> Some legacy properties are still supported but are marked as deprecated
+> and will be removed in a future major release.
+
+### Form Configuration
+
+The object passed to `FormBuilder.buildForm(options)` or
+`formBuilder.buildForm(options)` represents a form.
+
+```js
+interface FormConfig {
+  fieldsets?: FieldsetConfig[];
+  submit?: (e: SubmitEvent) => void;
+
+  // Any valid HTML <form> attribute may also be provided directly
+  // (e.g. action, method, enctype, class, id, etc.)
+}
+```
+
+#### Deprecated
+
+```js
+attributes?: object;
+```
+
+Passing form attributes inside an `attributes` object is deprecated.
+All valid HTML attributes should be provided directly on the form config
+instead.
+
+### Fieldset Configuration
+
+```js
+interface FieldsetConfig {
   legend?: string;
-  fields?: IField[] | ISelect[];
-  grid?: boolean;
-}
+  fields?: FieldConfig[];
+  grid?: string | number | GridConfig;
 
-interface IField {
-  attributes?: object[];
-  datalist?: IDatalist;
-  grid?: string | IGrid;
+  // Any valid HTML <fieldset> attribute may also be provided directly
+}
+```
+
+---
+
+### Field Configuration
+
+Each field represents either an input or a select element.
+
+```js
+interface FieldConfig {
+  type?: string;
   label?: string;
-  type: 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'search' | 'tel' | 'text' | 'time' | 'url' | 'week';
-}
+  grid?: string | number | GridConfig;
+  datalist?: DatalistConfig;
 
-interface IGrid {
+  // Any valid HTML attribute for the underlying element
+  // may be provided directly (e.g. name, placeholder, value, required, etc.)
+}
+```
+
+Supported input types include:
+
+```
+checkbox, color, date, datetime-local, email, file, hidden,
+image, month, number, password, radio, range, search,
+tel, text, time, url, week, select
+```
+
+#### Deprecated
+
+```js
+attributes?: object;
+```
+
+Passing field attributes inside an `attributes` object is deprecated.
+Attributes should now be provided directly on the field configuration.
+
+---
+
+### Grid Configuration
+
+```js
+interface GridConfig {
   xs?: number;
   sm?: number;
   md?: number;
@@ -84,21 +136,74 @@ interface IGrid {
   xl?: number;
   xxl?: number;
 }
+```
 
-interface ISelect {
-  attributes: object[]; // attributes must have an options property
-  label?: string;
-  type?: 'select';
+Grid values map directly to Bootstrap column classes.
+
+Examples:
+
+```js
+grid: 6              // col-6
+grid: 'col-md-4'     // custom class
+grid: { md: 4 }      // col-md-4
+```
+
+---
+
+### Select Configuration
+
+When `type` is set to `select`, the field accepts an `options` array.
+
+```js
+interface SelectOption {
+  text?: string;
+  value?: string;
+  disabled?: boolean;
+  selected?: boolean;
 }
 
-interface IDatalist {
-  id: string;
-  values: string[];
+interface SelectOptGroup {
+  label: string;
+  options: SelectOption[];
+}
+
+options: (SelectOption | SelectOptGroup)[];
+```
+
+---
+
+### Datalist Configuration
+
+```js
+interface DatalistConfig {
+  options: string[] | SelectOption[];
 }
 ```
 
+The datalist configuration is passed directly to a generated
+`<datalist>` element.
+
+---
+
+### Summary of Deprecated Properties
+
+The following properties are deprecated and will be removed
+in a future major release:
+
+- `form.attributes`
+- `field.attributes`
+
+All valid HTML attributes should now be passed directly
+to the configuration object instead of nested under `attributes`.
+
 ## Example
-The following is an example of dynamically building a contact form:
+
+The following is an example of dynamically building a contact form.
+
+> Note:
+> The following example uses the UMD build `formBuilder`.
+> For ES module usage, replace `formBuilder` with `FormBuilder`.
+
 ```js
 window.addEventListener('load', () => {
   const contactFormOptions = {
@@ -500,18 +605,25 @@ window.addEventListener('load', () => {
     }
   };
   const contactForm = formBuilder.buildForm(contactFormOptions);
-  const input = document.createElement('input');
-  input.setAttribute('class', 'btn btn-primary');
-  input.setAttribute('type', 'submit');
-  input.value = 'Submit';
-  contactForm.append(input);
   document
     .getElementById('container')
     .append(contactForm);
 }, false);
 ```
 
+## Design Philosophy
+
+Bootstrap Form Builder is intentionally permissive.
+
+- Most valid HTML attributes may be passed directly to elements
+- Unknown attributes are ignored with warnings
+- Bootstrap classes are applied automatically when missing
+- The library generates standard HTML and does not abstract it away
+
+The intention was to have this library favor flexibility and clarity over rigid schemas.
+
 ## Donate
+
 Show your support! Your (non-tax deductible) donation of Monero cryptocurrency is a sign of solidarity among web developers.
 
 Being self taught, I have come a long way over the years. I certainly do not intend on making a living from this free feature, but my hope is to earn a few dollars to validate all of my hard work.
