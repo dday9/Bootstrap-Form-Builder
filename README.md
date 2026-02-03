@@ -19,6 +19,11 @@ A simple solution for creating Bootstrap forms on the fly.
 
 This library can be used either as an ES module or as a UMD script (classic `<script>` usage).
 
+For your convenience, the src have been built using [rollup](https://rollupjs.org) and included in the dist folder. They can be found here:
+
+- [./dist/bootstrap-form-builder.esm.js](./dist/bootstrap-form-builder.esm.js)
+- [./dist/bootstrap-form-builder.umd.js](./dist/bootstrap-form-builder.umd.js)
+
 ### ES Module (recommended)
 
 ```js
