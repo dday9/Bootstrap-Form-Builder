@@ -176,6 +176,28 @@ options: (SelectOption | SelectOptGroup)[];
 
 ---
 
+### Switch Configuration
+
+Bootstrap switches are implemented using checkbox inputs with the appropriate Bootstrap classes and attributes.
+
+To create a switch, set the field type to checkbox and set the `role` attribute to `"switch"`.
+
+- Switches are a special case of checkbox inputs
+- All valid checkbox attributes are supported (`checked`, `required`, `value`, etc.)
+- The form-switch class is applied automatically when `role: "switch"` is detected
+- No additional configuration is required beyond setting the role attribute.
+
+```js
+{
+  type: 'checkbox',
+  label: 'Enable Notifications',
+  name: 'notifications_enabled',
+  role: 'switch'
+}
+```
+
+---
+
 ### Datalist Configuration
 
 ```js
