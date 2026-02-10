@@ -844,6 +844,10 @@ class FormField {
 
 	static createElement(attributesWithValues = null) {
 		let container = null;
+		let labelElement = null;
+		let innerContainer = null;
+		let element = null;
+		
 		if (Fieldset.isFieldset(attributesWithValues)) {
 			container = Fieldset.createElement(attributesWithValues);
 		} else if (Utilities.IS_ARGUMENT_OBJECT(attributesWithValues)) {
@@ -851,9 +855,7 @@ class FormField {
 
 			if (attributesWithValues.label) {
 				const label = Label.getLabelByType(attributesWithValues.type);
-				const labelElement = label.createElement(attributesWithValues.label);
-				container.appendChild(labelElement);
-
+				labelElement = label.createElement(attributesWithValues.label);
 				attributesWithValues = {
 					...attributesWithValues
 				};
@@ -861,17 +863,18 @@ class FormField {
 			}
 
 			if (attributesWithValues.type === 'select') {
-				const element = Select.createElement(attributesWithValues);
+				element = Select.createElement(attributesWithValues);
 				container.appendChild(element);
 			} else {
 				const inputType = attributesWithValues.type;
 				const input = Input.getInputByType(attributesWithValues.type);
-				const element = input.createElement(attributesWithValues);
+				element = input.createElement(attributesWithValues);
 				if (
 					inputType === CheckboxInput.INPUT_TYPE ||
 					inputType === RadioInput.INPUT_TYPE
 				) {
-					container.classList.add('form-check');
+					innerContainer = this.#_createContainer();
+					innerContainer.classList.add('form-check');
 				}
 
 				if (
@@ -881,15 +884,20 @@ class FormField {
 					element.setAttribute('role', 'switch');
 					container.classList.add('form-switch');
 				}
-
-				container.appendChild(element);
 			}
-
 		} else {
 			console.warn('FormField must be a Fieldset or Input');
 			return null;
 		}
 
+		if (innerContainer) {
+			innerContainer.appendChild(labelElement);
+			innerContainer.appendChild(element);
+			container.appendChild(innerContainer);
+		} else {
+			container.appendChild(labelElement);
+			container.appendChild(element);
+		}
 		this.#_setContainerGrid(container, attributesWithValues);
 
 		return container;
