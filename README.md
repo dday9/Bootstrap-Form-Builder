@@ -15,6 +15,12 @@ A simple solution for creating Bootstrap forms on the fly.
 
  - Bootstrap 5.x
 
+## Documentation
+
+The documentation can be found in the Wiki: https://github.com/dday9/Bootstrap-Form-Builder/wiki/2.-Building-Forms
+
+This covers everything from installation to usage.
+
 ## Installation
 
 This library can be used either as an ES module or as a UMD script (classic `<script>` usage).
