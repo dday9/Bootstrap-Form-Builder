@@ -226,8 +226,8 @@ class CheckboxInput extends Input {
 		) {
 			return false;
 		}
-		const role = attributesWithValues['role'];
-		return !role || role === 'switch';
+		const role = attributesWithValues.role ?? attributesWithValues?.attributes?.role;
+		return role === 'switch';
 	}
 }
 
