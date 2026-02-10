@@ -111,7 +111,7 @@ Supported input types include:
 ```
 checkbox, color, date, datetime-local, email, file, hidden,
 image, month, number, password, radio, range, search,
-tel, text, time, url, week, select
+tel, text, time, url, week, select, textarea
 ```
 
 #### Deprecated
@@ -595,6 +595,16 @@ window.addEventListener('load', () => {
             xs: 12,
             md: 4
           }
+        },
+        {
+          attributes: {
+            name: 'message',
+            rows: 5,
+            placeholder: 'Enter your message'
+          },
+          label: 'Message',
+          type: 'textarea',
+          grid: 12
         }]
       }
     ],

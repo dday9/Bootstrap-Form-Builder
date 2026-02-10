@@ -797,6 +797,64 @@ class Datalist {
 	}
 }
 
+// textarea
+class Textarea {
+
+	static BOOTSTRAP_CLASS = 'form-control';
+	static STRUCTURAL_KEYS = Object.freeze(new Set(['type', 'grid', 'label']));
+	static TYPE_SPECIFIC_ARGUMENTS = Object.freeze(new Set([
+		'autocomplete',
+		'autofocus',
+		'cols',
+		'dirname',
+		'disabled',
+		'maxlength',
+		'minlength',
+		'name',
+		'placeholder',
+		'readonly',
+		'required',
+		'rows',
+		'wrap'
+	]));
+
+	static createElement(attributesWithValues = {}) {
+		if (!Utilities.IS_ARGUMENT_OBJECT(attributesWithValues)) {
+			console.warn('Textarea config must be an object.');
+			attributesWithValues = {};
+		}
+
+		attributesWithValues = Utilities.flattenLegacyAttributes(attributesWithValues);
+
+		const textarea = document.createElement('textarea');
+
+		const {
+			value,
+			...attrs
+		} = attributesWithValues;
+
+		for (const [rawKey, val] of Object.entries(attrs)) {
+			const key = rawKey.toLowerCase();
+			if (this.STRUCTURAL_KEYS.has(key)) {
+				continue;
+			}
+
+			if (Utilities.isValidAttribute(key, this.TYPE_SPECIFIC_ARGUMENTS)) {
+				Utilities.setAttribute(textarea, key, val);
+			} else {
+				console.warn(`'${key}' is invalid for <textarea>.`);
+			}
+		}
+
+		if (value != null) {
+			textarea.value = value;
+		}
+
+		textarea.classList.add(this.BOOTSTRAP_CLASS);
+		return textarea;
+	}
+}
+
 // labels
 class Label {
 	static BOOTSTRAP_CLASS = 'form-label';
@@ -864,6 +922,9 @@ class FormField {
 
 			if (attributesWithValues.type === 'select') {
 				element = Select.createElement(attributesWithValues);
+				container.appendChild(element);
+			} else if (attributesWithValues.type === 'textarea') {
+				element = Textarea.createElement(attributesWithValues);
 				container.appendChild(element);
 			} else {
 				const inputType = attributesWithValues.type;

@@ -387,6 +387,16 @@ const demoFormConfig = {
 						xs: 12,
 						md: 4
 					}
+				},
+				{
+					attributes: {
+						name: 'message',
+						rows: 5,
+						placeholder: 'Enter your message'
+					},
+					label: 'Message',
+					type: 'textarea',
+					grid: 12
 				}
 			]
 		}
