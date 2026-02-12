@@ -755,11 +755,25 @@
 
 	class Datalist {
 
+		static #INPUT_TYPES_ALLOWED = Object.freeze(new Set(['color', 'date', 'datetime-local', 'email', 'month', 'number', 'range', 'search', 'text', 'time', 'url', 'week']));
 		static STRUCTURAL_KEYS = Object.freeze(new Set(['options']));
+
+		static elementAllowsDatalist(element) {
+			if (!element) {
+				return false;
+			}
+			if (!(element instanceof HTMLInputElement)) {
+				return false;
+			}
+			const inputType = element.type;
+			const hasAllowedType = Datalist.#INPUT_TYPES_ALLOWED.has(inputType);
+			return hasAllowedType;
+		}
 
 		static createElement(attributesWithValues = null) {
 			const datalist = document.createElement('datalist');
 
+			attributesWithValues = Utilities.flattenLegacyAttributes(attributesWithValues);
 			if (Array.isArray(attributesWithValues)) {
 				attributesWithValues = {
 					options: attributesWithValues
@@ -769,14 +783,20 @@
 					console.warn('Datalist attributes must be an object or an array.');
 				}
 				attributesWithValues = {};
+			} else if (Array.isArray(attributesWithValues?.options)) {
+				attributesWithValues.options = Utilities.normalizeLegacyOptions(attributesWithValues.options);
 			}
 
-			for (let key in attributesWithValues) {
+			if (!attributesWithValues.id) {
+				console.warn('Datalist should have an id.');
+			}
+
+			for (const [rawKey, value] of Object.entries(attributesWithValues)) {
+				const key = rawKey.toLowerCase();
 				if (this.STRUCTURAL_KEYS.has(key)) {
 					continue;
 				}
 
-				const value = attributesWithValues[key];
 				this.#_setAttribute(datalist, key, value);
 			}
 
@@ -911,6 +931,7 @@
 			let labelElement = null;
 			let innerContainer = null;
 			let element = null;
+			let datalist = null;
 			
 			if (Fieldset.isFieldset(attributesWithValues)) {
 				container = Fieldset.createElement(attributesWithValues);
@@ -936,6 +957,20 @@
 					const inputType = attributesWithValues.type;
 					const input = Input.getInputByType(attributesWithValues.type);
 					element = input.createElement(attributesWithValues);
+
+					if (attributesWithValues.datalist && Datalist.elementAllowsDatalist(element)) {
+						if (attributesWithValues.datalist) {
+							delete attributesWithValues.list;
+						}
+
+						const datalistConfig = attributesWithValues.datalist;
+						datalist = Datalist.createElement(datalistConfig);
+						if (!datalist.id) {
+							datalist.id = IdGenerator.next('datalist');
+						}
+						element.setAttribute('list', datalist.id);
+					}
+
 					if (
 						inputType === CheckboxInput.INPUT_TYPE ||
 						inputType === RadioInput.INPUT_TYPE
@@ -958,12 +993,24 @@
 			}
 
 			if (innerContainer) {
-				innerContainer.appendChild(labelElement);
-				innerContainer.appendChild(element);
+				if (labelElement) {
+					innerContainer.appendChild(labelElement);
+				}
+				if (element) {
+					innerContainer.appendChild(element);
+				}
 				container.appendChild(innerContainer);
 			} else {
-				container.appendChild(labelElement);
-				container.appendChild(element);
+				if (labelElement) {
+					container.appendChild(labelElement);
+				}
+				if (element) {
+					container.appendChild(element);
+				}
+			}
+
+			if (datalist) {
+				container.appendChild(datalist);
 			}
 			this.#_setContainerGrid(container, attributesWithValues);
 
@@ -1138,6 +1185,21 @@
 			return form;
 		}
 
+	}
+
+	class IdGenerator {
+		static #counter = 0;
+
+		static next(prefix = 'id') {
+			if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+				return `${prefix}-${crypto.randomUUID()}`;
+			}
+
+			this.#counter++;
+			const base36Timestamp = Date.now().toString(36);
+			const base36Counter = this.#counter.toString(36);
+			return `${prefix}-${base36Timestamp}-${base36Counter}`;
+		}
 	}
 
 	return formBuilder;

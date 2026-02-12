@@ -3,7 +3,8 @@ const demoFormConfig = {
 		enctype: 'application/x-www-form-urlencoded',
 		method: 'post'
 	},
-	fieldsets: [{
+	fieldsets: [
+		{
 			grid: true,
 			legend: 'Name',
 			fields: [
@@ -383,6 +384,33 @@ const demoFormConfig = {
 					},
 					label: 'Is Mailing Address?',
 					type: 'checkbox',
+					grid: {
+						xs: 12,
+						md: 4
+					}
+				}
+			]
+		},
+		{
+			grid: true,
+			legend: 'Extra Info',
+			fields: [
+				{
+					attributes: {
+						name: 'browser',
+						placeholder: 'Brave'
+					},
+					datalist: {
+						id: 'datalist-browser',
+						options: [
+							'Chrome',
+							'Firefox',
+							'Safari',
+							'Edge'
+						]
+					},
+					label: 'Browser',
+					type: 'text',
 					grid: {
 						xs: 12,
 						md: 4
