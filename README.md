@@ -15,6 +15,10 @@ A simple solution for creating Bootstrap forms on the fly.
 
  - Bootstrap 5.x
 
+## CDN
+- UMD: [https://cdn.jsdelivr.net/gh/dday9/Bootstrap-Form-Builder@2.0.1/dist/bootstrap-form-builder.umd.min.js](https://cdn.jsdelivr.net/gh/dday9/Bootstrap-Form-Builder@2.0.1/dist/bootstrap-form-builder.umd.min.js)
+- ESM: [https://cdn.jsdelivr.net/gh/dday9/Bootstrap-Form-Builder@2.0.1/dist/bootstrap-form-builder.esm.min.js](https://cdn.jsdelivr.net/gh/dday9/Bootstrap-Form-Builder@2.0.1/dist/bootstrap-form-builder.esm.min.js)
+
 ## Documentation
 
 The documentation can be found in the Wiki: https://github.com/dday9/Bootstrap-Form-Builder/wiki/2.-Building-Forms
